@@ -1,30 +1,34 @@
 import { Modal } from './../plugins/modal/modal.js';
 
 export const view = {
-  input: document.querySelector('.search-input'),
+  searchInput: document.querySelector('.search-input'),
   searchBtn: document.querySelector('.search-btn'),
-  msgArea: document.querySelector('.profiles-msg_area'),
+  msgContainer: document.querySelector('.profiles-msg_area'),
   usersContainer: document.querySelector('.profiles-cards_container'),
+  preloader: document.querySelector('#preloader'),
   modals: [],
 
   resetUsersContainer() {
     this.cardsCount = 0;
     this.clearModals();
-    this.clearAll();
+    this.clearAllContainers();
   },
 
-  showUsers(count, users) {
+  prepareUsersContainer(count, { length }) {
     this.resetUsersContainer();
-    if (!users.length) {
+    if (!length) {
       this.showMessage('There is no coincidence...');
       return;
     }
-
     this.showMessage(`${count} founded...`);
-    users.forEach(this.createCard, this);
   },
 
-  async createCard(user) {
+  showUsers(users) {
+    users.forEach(this.createCard, this);
+    console.log(document.querySelectorAll('.profiles-card').length);
+  },
+
+  createCard(user) {
     const cardHTML = `
       <div
         class="profiles-card"
@@ -66,12 +70,16 @@ export const view = {
   },
 
   showMessage(msg) {
-    this.msgArea.innerHTML = msg;
+    this.msgContainer.innerHTML = msg;
   },
 
-  clearAll() {
+  togglePreloader(action) {
+    this.preloader.classList[action]('hide');
+  },
+
+  clearAllContainers() {
     this.clear(this.usersContainer);
-    this.clear(this.msgArea);
+    this.clear(this.msgContainer);
   },
 
   clear: container => (container.innerHTML = ''),

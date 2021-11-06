@@ -1,22 +1,49 @@
 import { view } from './view.js';
+import { search } from './search.js';
 
 export const model = {
-  async loadGitHubUsers() {
-    let name = this.getName().trim();
-    if (!name) {
+  perPage: 20,
+
+  resetState() {
+    this.page = 0;
+    this.usersUrl = [];
+    this.isFetched = false;
+  },
+
+  async startLoading() {
+    this.resetState();
+    this.name = this.getName().trim();
+    if (!this.name) {
       this.cachedName = null;
-      view.clearAll();
+      view.clearAllContainers();
       return;
     }
 
-    if (name === this.cachedName) {
+    if (this.name === this.cachedName) {
       return;
     }
-    this.cachedName = name;
+    this.cachedName = this.name;
+    this.loadGitHubUsers();
+  },
 
-    let { total_count, items } = await search.loadGitHubUsers(name);
-    this.usersUrl = items.map(({ url }) => url);
-    view.showUsers(total_count, items);
+  async loadGitHubUsers() {
+    try {
+      let { total_count, items: users } =
+        await search.loadGitHubUsers(
+          this.name,
+          this.perPage,
+          this.page++
+        );
+
+      this.usersUrl.push(...users.map(({ url }) => url));
+      if (!this.isFetched) {
+        view.prepareUsersContainer(total_count, users);
+        this.isFetched = true;
+      }
+      view.showUsers(users);
+    } catch ({ message }) {
+      console.error(message);
+    }
   },
 
   async showModal(id) {
@@ -24,5 +51,5 @@ export const model = {
     view.showModal(user, id);
   },
 
-  getName: () => view.input.value
+  getName: () => view.searchInput.value
 };

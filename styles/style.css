@@ -17,6 +17,10 @@ body {
   display: flex;
 }
 
+.hide {
+  visibility: hidden;
+}
+
 /* --------------
 //
 //   Header styles
@@ -75,6 +79,10 @@ body {
 //
 / --------------*/
 
+.profiles {
+  padding-bottom: 10px;
+}
+
 .profiles .container {
   display: flex;
   flex-direction: column;
@@ -89,7 +97,7 @@ body {
 .profiles-cards_container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 1%;
+  grid-gap: 10px;
   padding: 20px 0;
 }
 
@@ -116,4 +124,23 @@ body {
 
 .profiles-card-title {
   font-size: 0.8rem;
+}
+
+#preloader {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background: transparent;
+  border: 4px solid #757575;
+  border-top-color: #0288d1;
+  animation: rotate 1s linear 0s infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

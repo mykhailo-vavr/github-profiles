@@ -44,6 +44,7 @@
 
 .modal-body-content {
   display: grid;
+  grid-auto-rows: minmax(1fr, auto);
   grid-gap: 10px;
   font-size: 0.9rem;
 }
