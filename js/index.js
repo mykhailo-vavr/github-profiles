@@ -1,2 +1,2 @@
-import { controller as GithubProfiles } from './githubProfiles.js';
+import { controller as GithubProfiles } from './controller.js';
 GithubProfiles.start();

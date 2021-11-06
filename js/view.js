@@ -1,49 +1,6 @@
 import { Modal } from './../plugins/modal/modal.js';
 
-const search = {
-  async loadJson(url) {
-    let response = await fetch(url);
-    if (!response.ok) {
-      console.error('Error', response.status);
-      return;
-    }
-    return await response.json();
-  },
-
-  async loadGitHubUsers(name) {
-    const url = `https://api.github.com/search/users?q=${name}&per_page=10`;
-    return await this.loadJson(url);
-  }
-};
-
-const model = {
-  async loadGitHubUsers() {
-    let name = this.getName().trim();
-    if (!name) {
-      this.cachedName = null;
-      view.clearAll();
-      return;
-    }
-
-    if (name === this.cachedName) {
-      return;
-    }
-    this.cachedName = name;
-
-    let { total_count, items } = await search.loadGitHubUsers(name);
-    this.usersUrl = items.map(({ url }) => url);
-    view.showUsers(total_count, items);
-  },
-
-  async showModal(id) {
-    let user = await search.loadJson(this.usersUrl[id]);
-    view.showModal(user, id);
-  },
-
-  getName: () => view.input.value
-};
-
-const view = {
+export const view = {
   input: document.querySelector('.search-input'),
   searchBtn: document.querySelector('.search-btn'),
   msgArea: document.querySelector('.profiles-msg_area'),
@@ -124,39 +81,3 @@ const view = {
     this.modals = [];
   }
 };
-
-export const controller = {
-  start() {
-    this.setListeners();
-  },
-
-  setListeners() {
-    view.input.addEventListener(
-      'input',
-      this.debounce(model.loadGitHubUsers.bind(model))
-    );
-    view.usersContainer.addEventListener(
-      'click',
-      this.onClick.bind(this)
-    );
-  },
-
-  onClick({ target }) {
-    let elem = target.closest('[data-action]');
-    let action = elem?.dataset.action;
-    if (action) {
-      let id = elem?.dataset.id;
-      model[action](id);
-    }
-  },
-
-  debounce(func, ms = 500) {
-    let timerId;
-    return function (...args) {
-      clearInterval(timerId);
-      timerId = setTimeout(() => func.apply(this, args), ms);
-    };
-  }
-};
-
-controller.start();
