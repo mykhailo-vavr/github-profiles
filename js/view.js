@@ -25,7 +25,6 @@ export const view = {
 
   showUsers(users) {
     users.forEach(this.createCard, this);
-    console.log(document.querySelectorAll('.profiles-card').length);
   },
 
   createCard(user) {
@@ -80,6 +79,7 @@ export const view = {
   clearAllContainers() {
     this.clear(this.usersContainer);
     this.clear(this.msgContainer);
+    view.togglePreloader('add');
   },
 
   clear: container => (container.innerHTML = ''),

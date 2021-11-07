@@ -14,7 +14,6 @@ export class Modal {
     }
 
     const user = this.user;
-    console.log(user);
     let items = this.propsForShow.map(this.createItem, this).join('');
     const modalHTML = `
         <div class="modal">
